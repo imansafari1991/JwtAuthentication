@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using jwt_authentication.Models.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace jwt_authentication
 {
@@ -28,6 +30,10 @@ namespace jwt_authentication
         {
 
             services.AddControllers();
+              services.AddDbContext<MyDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("_MyConn"));
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "jwt_authentication", Version = "v1" });
