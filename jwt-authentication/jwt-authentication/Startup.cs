@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using jwt_authentication.Models.Context;
 using Microsoft.EntityFrameworkCore;
+using jwt_authentication.Utilities;
 
 namespace jwt_authentication
 {
@@ -30,7 +31,9 @@ namespace jwt_authentication
         {
 
             services.AddControllers();
-              services.AddDbContext<MyDbContext>(options =>
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.AddTransient<IUserService, UserService>();
+            services.AddDbContext<MyDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("_MyConn"));
             });
@@ -55,7 +58,7 @@ namespace jwt_authentication
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseMiddleware<JwtMiddleWare>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
